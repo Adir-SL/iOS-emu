@@ -1,0 +1,442 @@
+/* ============================================================
+   CSS Variables & Reset
+   ============================================================ */
+:root {
+  --bg: #1a1a1f;
+  --surface: #222228;
+  --surface2: #2c2c34;
+  --border: #3a3a45;
+  --accent: #0a84ff;
+  --accent-hover: #409cff;
+  --text: #f2f2f7;
+  --text-muted: #8e8e93;
+  --toggle-off: #3a3a45;
+  --toggle-on: #30d158;
+  --radius: 12px;
+  --phone-radius: 52px;
+  --frame-border: #3d3d45;
+  --frame-bg: #18181d;
+  --frame-inner: #0d0d10;
+  --control-h: 130px;
+  --titlebar-h: 28px;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f0f0f5;
+    --surface: #ffffff;
+    --surface2: #f2f2f7;
+    --border: #d1d1d6;
+    --text: #1c1c1e;
+    --text-muted: #6c6c70;
+    --toggle-off: #c7c7cc;
+    --frame-border: #c8c8d0;
+    --frame-bg: #2c2c34;
+    --frame-inner: #0d0d10;
+  }
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: transparent;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+  color: var(--text);
+  font-size: 13px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================================
+   Titlebar drag region
+   ============================================================ */
+#titlebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--titlebar-h);
+  z-index: 100;
+  -webkit-app-region: drag;
+  app-region: drag;
+}
+
+/* ============================================================
+   App layout
+   ============================================================ */
+#app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  padding-top: var(--titlebar-h);
+  background: var(--bg);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* ============================================================
+   Controls strip
+   ============================================================ */
+#controls {
+  width: 100%;
+  padding: 8px 12px 6px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
+}
+
+#address-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+#device-select {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 11px;
+  padding: 5px 6px;
+  cursor: pointer;
+  flex-shrink: 0;
+  max-width: 130px;
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%238e8e93' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 6px center;
+  padding-right: 22px;
+}
+
+#device-select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+#url-input {
+  flex: 1;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 12px;
+  padding: 5px 10px;
+  min-width: 0;
+  transition: border-color 0.15s;
+}
+
+#url-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+#url-input::placeholder {
+  color: var(--text-muted);
+}
+
+#go-btn, #reload-btn {
+  background: var(--accent);
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 14px;
+  width: 30px;
+  height: 28px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s, transform 0.1s;
+}
+
+#reload-btn {
+  background: var(--surface2);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+#go-btn:hover { background: var(--accent-hover); }
+#reload-btn:hover { background: var(--border); }
+#go-btn:active, #reload-btn:active { transform: scale(0.93); }
+
+#device-info {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+
+/* ============================================================
+   Bug toggle panel
+   ============================================================ */
+#toggles-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.toggles-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+#toggles-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.toggle-chip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 3px 8px 3px 5px;
+  cursor: pointer;
+  user-select: none;
+  transition: border-color 0.15s, background 0.15s;
+  font-size: 10.5px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.toggle-chip:hover {
+  border-color: var(--text-muted);
+  color: var(--text);
+}
+
+.toggle-chip.active {
+  border-color: var(--toggle-on);
+  color: var(--text);
+  background: rgba(48, 209, 88, 0.08);
+}
+
+.toggle-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--toggle-off);
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+
+.toggle-chip.active .toggle-dot {
+  background: var(--toggle-on);
+}
+
+/* ============================================================
+   Phone frame area
+   ============================================================ */
+#phone-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 0 8px;
+  overflow: hidden;
+}
+
+#phone-frame {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--frame-bg);
+  border-radius: var(--phone-radius);
+  border: 2px solid var(--frame-border);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.06) inset,
+    0 4px 32px rgba(0,0,0,0.6),
+    0 1px 0 rgba(255,255,255,0.08) inset;
+  overflow: hidden;
+  transition: width 0.25s ease, height 0.25s ease, border-radius 0.25s ease;
+}
+
+/* Side buttons (decorative) */
+#phone-frame::before {
+  content: '';
+  position: absolute;
+  left: -4px;
+  top: 100px;
+  width: 3px;
+  height: 36px;
+  background: var(--frame-border);
+  border-radius: 2px 0 0 2px;
+  box-shadow: 0 46px 0 var(--frame-border), 0 88px 0 var(--frame-border);
+}
+
+#phone-frame::after {
+  content: '';
+  position: absolute;
+  right: -4px;
+  top: 150px;
+  width: 3px;
+  height: 70px;
+  background: var(--frame-border);
+  border-radius: 0 2px 2px 0;
+}
+
+/* ---- Top bar (status bar + island/notch) ---- */
+#phone-topbar {
+  flex-shrink: 0;
+  position: relative;
+  width: 100%;
+  background: var(--frame-inner);
+  padding: 10px 16px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#island-notch {
+  /* Styled per frame type by JS */
+  flex-shrink: 0;
+}
+
+/* Dynamic Island */
+.island-notch--dynamic-island {
+  width: 120px;
+  height: 34px;
+  background: #000;
+  border-radius: 20px;
+  margin: 0 auto 2px;
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.04);
+}
+
+/* Notch (cutout style) */
+.island-notch--notch {
+  width: 150px;
+  height: 28px;
+  background: var(--frame-bg);
+  border-radius: 0 0 20px 20px;
+  margin: -10px auto 0;
+  position: relative;
+  z-index: 1;
+}
+
+/* SE forehead — just leave blank space */
+.island-notch--forehead {
+  height: 14px;
+}
+
+#status-bar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0 6px;
+  color: var(--text);
+}
+
+.status-time {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.status-icons {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  opacity: 0.9;
+}
+
+/* ---- Webview content area ---- */
+#webview-placeholder {
+  flex: 1;
+  background: var(--frame-inner);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+#webview-hint {
+  text-align: center;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.hint-icon {
+  font-size: 36px;
+  margin-bottom: 10px;
+  opacity: 0.5;
+}
+
+#webview-hint p {
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+/* ---- Bottom bar ---- */
+#phone-bottombar {
+  flex-shrink: 0;
+  background: var(--frame-inner);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding: 8px 0 12px;
+}
+
+#home-indicator {
+  width: 120px;
+  height: 5px;
+  background: rgba(255,255,255,0.25);
+  border-radius: 3px;
+}
+
+/* ---- Frame style variants ---- */
+
+/* SE: larger forehead/chin radius */
+#phone-frame.frame-se {
+  border-radius: 28px;
+}
+
+#phone-frame.frame-se #phone-topbar {
+  padding-top: 16px;
+}
+
+#phone-frame.frame-se #phone-bottombar {
+  padding: 16px 0 18px;
+}
+
+#phone-frame.frame-se #home-indicator {
+  width: 60px;
+  height: 60px;
+  background: rgba(255,255,255,0.06);
+  border: 2px solid rgba(255,255,255,0.15);
+  border-radius: 50%;
+}
+
+/* Notch: slightly different radius */
+#phone-frame.frame-notch {
+  border-radius: 44px;
+}
+
+/* Dynamic Island */
+#phone-frame.frame-dynamic-island {
+  border-radius: 50px;
+}
+
+/* ============================================================
+   Scrollbar suppression (the shell window itself)
+   ============================================================ */
+::-webkit-scrollbar { display: none; }
