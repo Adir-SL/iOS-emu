@@ -2,23 +2,12 @@
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "iOS Safari Tester",
   "version": "0.1.0",
-  "identifier": "com.ios-emu.app",
+  "identifier": "com.ios-emu.tester",
   "build": {
     "frontendDist": "../src"
   },
   "app": {
     "withGlobalTauri": true,
-    "windows": [
-      {
-        "label": "main",
-        "title": "iOS Safari Tester",
-        "width": 520,
-        "height": 980,
-        "resizable": false,
-        "decorations": false,
-        "transparent": true
-      }
-    ],
     "security": {
       "csp": null
     },
@@ -35,7 +24,5 @@
       "icons/icon.ico"
     ]
   },
-  "plugins": {
-    "store": {}
-  }
+  "plugins": {}
 }

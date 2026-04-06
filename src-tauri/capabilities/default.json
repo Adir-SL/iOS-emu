@@ -1,0 +1,10 @@
+{
+  "identifier": "default",
+  "description": "Default capabilities for iOS Safari Tester",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "store:default",
+    "core:window:allow-start-dragging"
+  ]
+}

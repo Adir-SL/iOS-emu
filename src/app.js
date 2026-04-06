@@ -2,12 +2,21 @@
 // Uses window.__TAURI__ injected by Tauri (withGlobalTauri: true)
 
 const { invoke } = window.__TAURI__.core;
-const { Store } = window.__TAURI_PLUGIN_STORE__;
 
-// ── Store ──────────────────────────────────────────────────────────────────
-let store;
-async function initStore() {
-  store = await Store.load('prefs.json', { autoSave: true });
+// ── Store helpers (direct invoke to tauri-plugin-store) ───────────────────
+const STORE_PATH = 'prefs.json';
+
+async function storeGet(key) {
+  try {
+    return await invoke('plugin:store|get', { path: STORE_PATH, key });
+  } catch { return null; }
+}
+
+async function storeSet(key, value) {
+  try {
+    await invoke('plugin:store|set', { path: STORE_PATH, key, value });
+    await invoke('plugin:store|save', { path: STORE_PATH });
+  } catch (e) { console.warn('store set failed', e); }
 }
 
 // ── Device definitions ────────────────────────────────────────────────────
@@ -408,15 +417,13 @@ async function handleDeviceChange() {
 
 // ── Persist prefs via Tauri store ─────────────────────────────────────────
 async function persistPrefs() {
-  if (!store) return;
-  await store.set('lastUrl', urlInput.value);
-  await store.set('lastDevice', currentDevice.id);
-  await store.set('activeToggles', [...activeToggles]);
+  await storeSet('lastUrl', urlInput.value);
+  await storeSet('lastDevice', currentDevice.id);
+  await storeSet('activeToggles', [...activeToggles]);
 }
 
 async function loadPrefs() {
-  if (!store) return;
-  const lastDevice = await store.get('lastDevice');
+  const lastDevice = await storeGet('lastDevice');
   if (lastDevice) {
     const d = DEVICES.find(x => x.id === lastDevice);
     if (d) {
@@ -424,10 +431,10 @@ async function loadPrefs() {
       deviceSelect.value = lastDevice;
     }
   }
-  const lastUrl = await store.get('lastUrl');
+  const lastUrl = await storeGet('lastUrl');
   if (lastUrl) urlInput.value = lastUrl;
 
-  const savedToggles = await store.get('activeToggles');
+  const savedToggles = await storeGet('activeToggles');
   if (Array.isArray(savedToggles)) {
     savedToggles.forEach(id => {
       if (BUG_TOGGLES.find(t => t.id === id)) {
@@ -446,7 +453,6 @@ deviceSelect.addEventListener('change', handleDeviceChange);
 
 // ── Boot ──────────────────────────────────────────────────────────────────
 (async function init() {
-  await initStore();
   buildDeviceSelect();
   buildToggles();
   await loadPrefs();
